@@ -1,6 +1,5 @@
 # Ideas
-
-Within our expertise:
+Leverage our technical expertise:
 (Vertical AI, narrow and expensive), targetting selling to companies/employees
 
 - Natural Language Prompt -> SIEM Query -> Run Query -> Debug Query -> Fix Bugs -> Valid Query
