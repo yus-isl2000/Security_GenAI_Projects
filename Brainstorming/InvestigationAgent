@@ -1,0 +1,56 @@
+
+I want to build an AI-driven investigation application to assist cybersecurity agents in efficiently handling security incidents and threat hunting. The application will:
+
+Document-Based Workflow:
+
+Open an investigation document where the cybersecurity agent can input IOCs (Indicators of Compromise) and natural language descriptions of the incident or threat-hunting goals.
+Follow a predefined schema for the document:
+Background: Context of the investigation.
+IOCs: Indicators such as IP addresses, hashes, domains, etc.
+Threat Intel: Supporting intelligence related to the investigation.
+Log Sources: A table of different log sources to query (e.g., ElasticSearch, SentinelOne, Symantec EDR).
+AI Query Generation and Execution:
+
+Use an AI agent to:
+Automatically generate and fine-tune queries (ElasticSearch queries, SentinelOne queries, Symantec EDR queries, etc.) based on the input IOCs and context.
+Validate and troubleshoot these queries, fixing errors dynamically.
+Execute the queries against various log sources via their APIs.
+Log Analysis and Insights:
+
+Retrieve log data from the queried sources, interpret the results, and categorize findings. This includes:
+Identifying log source, executed query, and key events found.
+Analyzing patterns, anomalies, or correlations in the logs.
+Automatically populate the investigation table in the document with:
+Log source queried.
+Query executed.
+Summary of events found.
+Detailed analysis and contextual notes.
+Intelligent Reporting:
+
+Generate a professional, comprehensive report at the end of the investigation:
+Include a summary of findings.
+Provide recommendations for mitigation or further investigation steps.
+Customizable Schema and API Integrations:
+
+Allow agents to define and customize the schema of the investigation document based on organizational needs.
+Provide integration templates for common log sources and EDR tools, but also allow custom API configurations for proprietary tools.
+Collaboration Features:
+
+Enable collaborative editing of investigation documents, so multiple analysts can contribute simultaneously.
+Track changes and maintain a history of edits for audit purposes.
+Visualization and Data Enrichment:
+
+Offer visual dashboards to represent data from the logs, such as timelines of events, heatmaps of anomalies, and network activity graphs.
+Enrich data using external threat intelligence sources, adding more context to the investigation.
+Integration with Existing Tooling:
+
+Provide export options for investigation data to popular SIEMs, SOAR platforms, or ticketing systems.
+Enable webhook notifications for critical findings.
+Secure and Scalable Architecture:
+
+Ensure the application is built with robust security measures to protect sensitive data.
+Design the system to handle large-scale log queries and data efficiently.
+Learning and Continuous Improvement:
+
+Implement a feedback loop where the AI agent learns from user feedback on the accuracy of queries and interpretations, improving over time.
+Provide a sandbox mode for testing new queries without affecting production systems.
