@@ -5,6 +5,10 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from pathlib import Path
 import json
+import webbrowser
+import time
+import pywinctl
+from threading import Thread
 
 app = FastAPI()
 
@@ -45,8 +49,68 @@ mock_data = {
         "Ransomware Trends 2024",
         "Emerging Techniques: Fileless Malware"
     ],
-    "gap_filling": ["Missing data for Endpoint Coverage"]
+    "gap_filling": ["Missing data for Endpoint Coverage"],
+    "workflow_monitoring": {}
 }
+
+# Function registry for agents
+agent_functions = {}
+
+def register_agent(name):
+    def decorator(func):
+        agent_functions[name] = func
+        return func
+    return decorator
+
+@register_agent("email_calendar")
+def email_calendar_agent():
+    return mock_data["email_calendar"]
+
+@register_agent("to_do")
+def to_do_agent():
+    return mock_data["to_do"]
+
+@register_agent("investigations")
+def investigations_agent():
+    return mock_data["investigations"]
+
+@register_agent("threat_hunts")
+def threat_hunts_agent():
+    return mock_data["threat_hunts"]
+
+@register_agent("threat_intel")
+def threat_intel_agent():
+    return mock_data["threat_intel"]
+
+@register_agent("gap_filling")
+def gap_filling_agent():
+    return mock_data["gap_filling"]
+
+# Workflow Monitoring Agent
+workflow_data = {}
+@register_agent("workflow_monitoring")
+def monitor_workflow():
+    while True:
+        try:
+            active_window = pywinctl.getActiveWindow()
+            window_title = active_window.title if active_window else "Unknown Window"
+
+            current_time = time.time()
+            if window_title in workflow_data:
+                workflow_data[window_title]["time_spent"] += 1
+            else:
+                workflow_data[window_title] = {"time_spent": 1, "last_active": current_time}
+
+            mock_data["workflow_monitoring"] = workflow_data
+            time.sleep(1)  # Check every second
+        except Exception as e:
+            print(f"Error in workflow monitoring: {e}")
+            time.sleep(1)
+
+@app.get("/workflow_monitoring")
+async def get_workflow_monitoring():
+    """Get real-time workflow monitoring data."""
+    return mock_data["workflow_monitoring"]
 
 @app.get("/", response_class=HTMLResponse)
 async def index():
@@ -147,6 +211,26 @@ async def index():
             <button onclick="refresh('gap_filling')">Refresh</button>
         </div>
 
+        <div id="workflow-monitoring">
+            <h2>Workflow Monitoring</h2>
+            <ul id="workflow-list"></ul>
+                <script>
+                    async function fetchWorkflowData() {{
+                        const response = await fetch('/workflow_monitoring');
+                        const data = await response.json();
+                        const list = document.getElementById('workflow-list');
+                        list.innerHTML = '';
+                        Object.entries(data).forEach(([key, value]) => {{
+                            if (value.time_spent !== undefined) {{
+                                list.innerHTML += `<li>${{key}}: ${{value.time_spent}}s</li>`;
+                            }}
+                        }});
+                    }}
+                    setInterval(fetchWorkflowData, 3000);
+                    fetchWorkflowData();
+                </script>
+        </div>
+
         <script>
             function refresh(module) {{
                 alert('Refreshing ' + module + ' module!');
@@ -160,7 +244,14 @@ async def index():
 @app.get("/refresh/{module}")
 async def refresh(module: str):
     """Endpoint to simulate refreshing a module."""
-    return {"status": "success", "module": module, "data": mock_data.get(module, "Unknown module")}
+    agent = agent_functions.get(module)
+    if agent:
+        return {"status": "success", "module": module, "data": agent()}
+    return {"status": "error", "message": "Agent not found"}
 
 if __name__ == "__main__":
+    # Launch browser automatically
+    Thread(target=lambda: webbrowser.open("http://127.0.0.1:8000")).start()
+    # Start the workflow monitoring thread
+    Thread(target=monitor_workflow, daemon=True).start()
     uvicorn.run(app, host="0.0.0.0", port=8000)
