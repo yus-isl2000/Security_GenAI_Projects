@@ -1,1 +1,160 @@
-Let's make an html webpage that will a the main webpage to for my Ai assistant. First here will be a box that represent the state of my emails and calendar to see the most up to date vision of anything important there. Then there will be a box for todo: today, near,medium and long term. Then there will be a box for current investigations, and another one for threat hunts. For each box there will be a button that will allow me to kick start the agent or refresh the status or engage it. The idea is that each agent is continuous looping and doing work on my behalf, one check calendar and email to notify and summarize important information, one to have a working memory of items in flight, one that is investigation a cyber case and doing queries and fillling a report on my behalf, one that is doing hunts so threat intel and then querying on logs based on that. There will finally be an threat intel box where we have a research agent that keeps with each hot topic. Each agent will have gaps in its workflow, so there will be also an agent working to fill in gaps. This last agent is going to need input from the user. All of this is going to be powered by a local python backend webserver where the python code for each agent will be. Make it modular so that each box in the front end is equivalent to one python agent in the backend. There will be some programming involved in python3 to connect for example to outlook, calendar, browsing for threat intel, etc... but most of the analysis work is going to be large language model based through the gemini API. 
+Structured Specification Prompt for AI Assistant Webpage
+Objective
+To design and implement a modular AI assistant webpage and backend to support a set of autonomous agents. Each agent will perform a specific function related to email, calendar, task management, threat intelligence, investigations, and cyber threat hunting. The system will allow user interaction and live updates through a centralized dashboard.
+
+Front-End Webpage Design
+Overview of the Webpage Structure
+
+Email and Calendar Module:
+
+Displays the latest important emails and calendar events.
+Summarizes critical items using an AI agent.
+Includes buttons for:
+Kick-start the agent.
+Refresh the status.
+Engage with the agent for input.
+To-Do List Module:
+
+Organized into four categories:
+Today.
+Near-term.
+Medium-term.
+Long-term.
+Includes buttons for:
+Kick-start the agent.
+Refresh the status.
+Engage with the agent for input.
+Current Investigations Module:
+
+Displays details of ongoing investigations.
+Uses an agent to:
+Perform queries.
+Generate reports.
+Track investigation progress.
+Includes buttons for:
+Kick-start the agent.
+Refresh the status.
+Engage with the agent for input.
+Threat Hunts Module:
+
+Shows active threat hunts and their progress.
+Powered by an agent that:
+Monitors threat intelligence feeds.
+Queries logs to identify anomalies.
+Includes buttons for:
+Kick-start the agent.
+Refresh the status.
+Engage with the agent for input.
+Threat Intel Research Module:
+
+Displays summaries of trending topics in cyber threat intelligence.
+Managed by an agent that continuously browses for hot topics and provides updates.
+Includes buttons for:
+Kick-start the agent.
+Refresh the status.
+Engage with the agent for input.
+Gap-Filling Agent Module:
+
+Highlights areas where other agents require user input.
+Allows the user to fill gaps manually.
+Includes buttons for:
+Kick-start the agent.
+Refresh the status.
+Engage with the agent for input.
+Modular Approach
+
+Each front-end box corresponds to a single Python agent on the backend.
+The layout is clean, with dynamic updates reflecting the status of the agents.
+Modular design ensures new modules/agents can be easily added.
+Back-End Implementation Plan
+Python Web Server
+
+Framework: Use Flask or FastAPI to serve the front-end and handle agent APIs.
+Core Features:
+Define endpoints for each agent.
+Handle incoming requests to kick-start, refresh, or engage with agents.
+Serve static content (HTML, CSS, JS) for the webpage.
+Agent Logic
+
+General Structure:
+
+Each agent will be a Python class/module with specific capabilities.
+Use the Gemini API for analysis tasks requiring large language models.
+Agent-Specific Tasks:
+
+Email and Calendar Agent:
+Connect to Outlook API to retrieve emails and calendar events.
+Use the Gemini API to summarize important items.
+To-Do Agent:
+Maintain a database (e.g., SQLite) for categorized tasks.
+Track task progress and provide updates.
+Investigation Agent:
+Integrate with log querying systems and report generation tools.
+Automate repetitive investigation tasks.
+Threat Hunt Agent:
+Leverage threat intelligence APIs and log management systems.
+Perform anomaly detection and generate insights.
+Threat Intel Research Agent:
+Continuously browse and summarize trending topics in cyber threat intelligence.
+Gap-Filling Agent:
+Monitor gaps in workflows and request user input as needed.
+Communication Protocol
+
+Use REST APIs to facilitate communication between the front-end and the backend.
+Define endpoints for each agent to support:
+Start/stop operations.
+Refresh status.
+Handle user input.
+Database Requirements
+
+Use a lightweight database (SQLite or PostgreSQL) to store:
+Task lists and their statuses.
+Investigation logs.
+Threat intelligence summaries.
+User inputs.
+Authentication and Security
+
+Use API keys or OAuth for authentication when integrating with external services (e.g., Outlook).
+Ensure secure communication using HTTPS.
+Agent Workflow
+
+Design agents to continuously loop and perform their tasks.
+Use scheduling libraries like APScheduler to manage periodic operations.
+Development Plan
+Phase 1: Front-End Design
+
+Create a responsive HTML webpage with placeholder modules for each agent.
+Implement modular CSS for styling.
+Phase 2: Back-End Integration
+
+Set up the Python web server with REST APIs for communication.
+Build stubs for each agent.
+Phase 3: Agent Implementation
+
+Develop and connect agents to their respective modules.
+Integrate external APIs (e.g., Outlook, threat intelligence feeds).
+Phase 4: Testing
+
+Test individual modules for functionality.
+Perform end-to-end testing to ensure seamless integration.
+Phase 5: Deployment
+
+Deploy the system locally.
+Plan for scaling to cloud hosting if required.
+Review Questions
+Completeness:
+
+Are all required modules and agents defined?
+Have we accounted for both agent-specific tasks and their gaps?
+Clarity:
+
+Is the modular design clear enough to support easy addition of new agents or features?
+Integration:
+
+Have we addressed all external system integrations (e.g., Outlook, threat intel APIs)?
+User Experience:
+
+Does the front-end design meet usability needs for live updates and user input?
+Scalability:
+
+Will this architecture support additional agents or modules as required?
