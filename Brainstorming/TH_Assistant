@@ -1,15 +1,17 @@
+
+Here’s the rewritten specification with the requested adjustments:
+
 Structured Specification Prompt for AI Assistant Webpage
 Objective
-To design and implement a modular AI assistant webpage and backend to support a set of autonomous agents. Each agent will perform a specific function related to email, calendar, task management, threat intelligence, investigations, and cyber threat hunting. The system will allow user interaction and live updates through a centralized dashboard.
+To design and implement a modular AI assistant webpage and backend to support autonomous agents. These agents will handle email, calendar, task management, investigations, threat intelligence, and cyber threat hunting. The initial iteration will use Python dictionaries for simplicity instead of a database. Additionally, a new Workflow Alignment Agent will monitor computer usage through screenshots to align workflows with the dashboard, ensuring tasks and agents are updated dynamically based on the user’s implicit priorities.
 
 Front-End Webpage Design
 Overview of the Webpage Structure
-
 Email and Calendar Module:
 
 Displays the latest important emails and calendar events.
 Summarizes critical items using an AI agent.
-Includes buttons for:
+Buttons:
 Kick-start the agent.
 Refresh the status.
 Engage with the agent for input.
@@ -20,36 +22,38 @@ Today.
 Near-term.
 Medium-term.
 Long-term.
-Includes buttons for:
+Buttons:
 Kick-start the agent.
 Refresh the status.
 Engage with the agent for input.
 Current Investigations Module:
 
 Displays details of ongoing investigations.
-Uses an agent to:
+Agent Tasks:
 Perform queries.
 Generate reports.
 Track investigation progress.
-Includes buttons for:
+Buttons:
 Kick-start the agent.
 Refresh the status.
 Engage with the agent for input.
 Threat Hunts Module:
 
 Shows active threat hunts and their progress.
-Powered by an agent that:
-Monitors threat intelligence feeds.
-Queries logs to identify anomalies.
-Includes buttons for:
+Agent Tasks:
+Monitor threat intelligence feeds.
+Query logs to identify anomalies.
+Buttons:
 Kick-start the agent.
 Refresh the status.
 Engage with the agent for input.
 Threat Intel Research Module:
 
 Displays summaries of trending topics in cyber threat intelligence.
-Managed by an agent that continuously browses for hot topics and provides updates.
-Includes buttons for:
+Agent Tasks:
+Continuously browse for hot topics.
+Provide updates.
+Buttons:
 Kick-start the agent.
 Refresh the status.
 Engage with the agent for input.
@@ -57,36 +61,61 @@ Gap-Filling Agent Module:
 
 Highlights areas where other agents require user input.
 Allows the user to fill gaps manually.
-Includes buttons for:
+Buttons:
 Kick-start the agent.
 Refresh the status.
 Engage with the agent for input.
-Modular Approach
+Workflow Alignment Agent Module (New):
 
-Each front-end box corresponds to a single Python agent on the backend.
-The layout is clean, with dynamic updates reflecting the status of the agents.
-Modular design ensures new modules/agents can be easily added.
+Monitors computer usage (e.g., screenshots) to align workflows with dashboard tasks.
+Agent Tasks:
+Analyze screenshots to infer current activities.
+Update the dashboard dynamically based on observed actions.
+Reorder priorities based on the intuition that the user knows best.
+Trigger updates or requests for input from other agents as needed.
+Front-End Features:
+Display recent activities and alignment status.
+Allow the user to override or manually adjust the workflow alignment.
+Buttons:
+Enable/disable monitoring.
+View alignment logs.
+Coding Agent Module:
+
+Dynamically creates Python code for new agents or missing functions.
+Tasks:
+Generate Python functions for backend agents.
+Add new boxes/modules to the front-end automatically.
+Update REST API endpoints to support new agents.
+Buttons:
+Request new agent.
+View generated code.
+Modular Approach
+Each front-end module corresponds to a Python agent.
+The layout is clean, with dynamic updates reflecting agent statuses.
+The Workflow Alignment Agent ensures the dashboard remains in sync with the user’s activities.
 Back-End Implementation Plan
 Python Web Server
-
-Framework: Use Flask or FastAPI to serve the front-end and handle agent APIs.
+Framework: Use FastAPI for scalability and responsiveness.
 Core Features:
 Define endpoints for each agent.
 Handle incoming requests to kick-start, refresh, or engage with agents.
 Serve static content (HTML, CSS, JS) for the webpage.
 Agent Logic
-
 General Structure:
 
 Each agent will be a Python class/module with specific capabilities.
-Use the Gemini API for analysis tasks requiring large language models.
+Use Python dictionaries to store:
+Tasks and their statuses.
+Logs for investigations, hunts, and alignments.
+Summaries for threat intelligence and calendar items.
+Use the Gemini API for tasks requiring large language models.
 Agent-Specific Tasks:
 
 Email and Calendar Agent:
 Connect to Outlook API to retrieve emails and calendar events.
-Use the Gemini API to summarize important items.
+Summarize important items using the Gemini API.
 To-Do Agent:
-Maintain a database (e.g., SQLite) for categorized tasks.
+Maintain a simple Python dictionary for categorized tasks.
 Track task progress and provide updates.
 Investigation Agent:
 Integrate with log querying systems and report generation tools.
@@ -97,64 +126,32 @@ Perform anomaly detection and generate insights.
 Threat Intel Research Agent:
 Continuously browse and summarize trending topics in cyber threat intelligence.
 Gap-Filling Agent:
-Monitor gaps in workflows and request user input as needed.
+Monitor workflows for gaps and request user input.
+Workflow Alignment Agent:
+Capture screenshots periodically to analyze computer use.
+Infer ongoing tasks and update the dashboard with the current step.
+Trigger other agents to start, refresh, or request user input.
+Reorder dashboard priorities based on user activity.
+Coding Agent:
+Analyze missing functionalities in other agents.
+Autonomously generate Python functions to fill gaps.
+Add new agents dynamically.
+Modify front-end templates to include new modules.
 Communication Protocol
-
 Use REST APIs to facilitate communication between the front-end and the backend.
-Define endpoints for each agent to support:
+Define endpoints for each agent:
 Start/stop operations.
 Refresh status.
 Handle user input.
-Database Requirements
-
-Use a lightweight database (SQLite or PostgreSQL) to store:
-Task lists and their statuses.
-Investigation logs.
-Threat intelligence summaries.
-User inputs.
-Authentication and Security
-
-Use API keys or OAuth for authentication when integrating with external services (e.g., Outlook).
-Ensure secure communication using HTTPS.
+The Workflow Alignment Agent exposes endpoints for:
+Managing screenshot frequency.
+Fetching inferred activities.
+Overriding priorities.
 Agent Workflow
-
-Design agents to continuously loop and perform their tasks.
-Use scheduling libraries like APScheduler to manage periodic operations.
-Development Plan
-Phase 1: Front-End Design
-
-Create a responsive HTML webpage with placeholder modules for each agent.
-Implement modular CSS for styling.
-Phase 2: Back-End Integration
-
-Set up the Python web server with REST APIs for communication.
-Build stubs for each agent.
-Phase 3: Agent Implementation
-
-Develop and connect agents to their respective modules.
-Integrate external APIs (e.g., Outlook, threat intelligence feeds).
-Phase 4: Testing
-
-Test individual modules for functionality.
-Perform end-to-end testing to ensure seamless integration.
-Phase 5: Deployment
-
-Deploy the system locally.
-Plan for scaling to cloud hosting if required.
-Review Questions
-Completeness:
-
-Are all required modules and agents defined?
-Have we accounted for both agent-specific tasks and their gaps?
-Clarity:
-
-Is the modular design clear enough to support easy addition of new agents or features?
-Integration:
-
-Have we addressed all external system integrations (e.g., Outlook, threat intel APIs)?
-User Experience:
-
-Does the front-end design meet usability needs for live updates and user input?
-Scalability:
-
-Will this architecture support additional agents or modules as required?
+Agents continuously loop and perform their tasks.
+The Workflow Alignment Agent:
+Captures screenshots using Python libraries like Pillow or mss.
+Analyzes window titles and visual patterns to infer tasks.
+Silently updates the dashboard to reflect user actions.
+Ensures other agents are started, refreshed, or prompted at appropriate times.
+Use APScheduler to manage periodic operations.
