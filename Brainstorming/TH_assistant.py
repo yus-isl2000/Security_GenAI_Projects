@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Form
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
@@ -9,6 +9,7 @@ import webbrowser
 import time
 import pywinctl
 from threading import Thread
+import random  # Mock LLM API response
 
 app = FastAPI()
 
@@ -27,29 +28,22 @@ app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 # Dummy data to simulate agent outputs
 mock_data = {
-    "email_calendar": {
-        "emails": ["Important: Security Incident", "Meeting Reminder: Team Sync"],
-        "calendar": ["10:00 AM - Security Briefing", "2:00 PM - Product Launch"]
-    },
     "to_do": {
         "today": ["Update Incident Report", "Respond to Critical Alert"],
         "near_term": ["Draft Threat Hunt Summary"],
         "medium_term": ["Review Quarterly Security Trends"],
         "long_term": ["Prepare Budget Proposal"]
     },
-    "investigations": [
-        {"name": "APT29 Analysis", "status": "In Progress"},
-        {"name": "Phishing Campaign", "status": "Pending"}
-    ],
+    "email_calendar": {
+        "emails": ["Security Alert", "Team Sync at 2 PM"],
+        "calendar": ["9 AM: Threat Meeting", "3 PM: Product Update"]
+    },
+    "investigations": ["Investigate Phishing Campaign", "APT29 Analysis"],
     "threat_hunts": [
         {"name": "Beacon Detection", "progress": "50%"},
         {"name": "Insider Threat", "progress": "20%"}
     ],
-    "threat_intel": [
-        "Ransomware Trends 2024",
-        "Emerging Techniques: Fileless Malware"
-    ],
-    "gap_filling": ["Missing data for Endpoint Coverage"],
+    "gap_filling":["Missing agent for X"],
     "workflow_monitoring": {}
 }
 
@@ -62,29 +56,54 @@ def register_agent(name):
         return func
     return decorator
 
-@register_agent("email_calendar")
-def email_calendar_agent():
-    return mock_data["email_calendar"]
+# Mock LLM API response
+def call_mock_llm(tasks):
+    return sorted(tasks, key=lambda _: random.random())
 
 @register_agent("to_do")
-def to_do_agent():
+def to_do_agent(new_input: str = None):
+    if new_input:
+        tasks = new_input.split("\n")
+        mock_data["to_do"]["today"].extend(tasks)
+        # Mock LLM response for reordering tasks
+        all_tasks = mock_data["to_do"]["today"]
+        reordered = call_mock_llm(all_tasks)
+        mock_data["to_do"]["today"] = reordered
     return mock_data["to_do"]
 
-@register_agent("investigations")
-def investigations_agent():
-    return mock_data["investigations"]
+@register_agent("email_calendar")
+def email_calendar_agent(new_input: str = None):
+    if new_input:
+        mock_data["email_calendar"]["emails"].append(new_input)
+        reordered_emails = call_mock_llm(mock_data["email_calendar"]["emails"])
+        mock_data["email_calendar"]["emails"] = reordered_emails
+    return mock_data["email_calendar"]
 
 @register_agent("threat_hunts")
 def threat_hunts_agent():
     return mock_data["threat_hunts"]
 
-@register_agent("threat_intel")
-def threat_intel_agent():
-    return mock_data["threat_intel"]
+@register_agent("investigations")
+def investigations_agent(new_input: str = None):
+    if new_input:
+        mock_data["investigations"].append(new_input)
+        mock_data["investigations"] = call_mock_llm(mock_data["investigations"])
+    return mock_data["investigations"]
 
-@register_agent("gap_filling")
-def gap_filling_agent():
-    return mock_data["gap_filling"]
+@app.post("/input/{module}")
+async def input_to_agent(module: str, new_input: str = Form(...)):
+    if module in agent_functions:
+        result = agent_functions[module](new_input)
+        return {"status": "success", "module": module, "data": result}
+    return {"status": "error", "message": "Agent not found"}
+
+@app.get("/refresh/{module}")
+async def refresh(module: str):
+    agent = agent_functions.get(module)
+    if agent:
+        return {"status": "success", "module": module, "data": agent()}
+    return {"status": "error", "message": "Agent not found"}
+
 
 # Workflow Monitoring Agent
 workflow_data = {}
@@ -107,6 +126,7 @@ def monitor_workflow():
             print(f"Error in workflow monitoring: {e}")
             time.sleep(1)
 
+
 @app.get("/workflow_monitoring")
 async def get_workflow_monitoring():
     """Get real-time workflow monitoring data."""
@@ -114,7 +134,6 @@ async def get_workflow_monitoring():
 
 @app.get("/", response_class=HTMLResponse)
 async def index():
-    """Serve the main dashboard page."""
     html_content = f"""
     <!DOCTYPE html>
     <html lang="en">
@@ -123,69 +142,47 @@ async def index():
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>AI Assistant Dashboard</title>
         <style>
-            body {{
-                font-family: Arial, sans-serif;
-                margin: 20px;
-                padding: 0;
-                background-color: #f4f4f9;
-            }}
-            h1 {{
-                color: #0056b3;
-            }}
-            div {{
-                background: #fff;
-                padding: 20px;
-                border-radius: 5px;
-                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                margin-bottom: 20px;
-            }}
-            button {{
-                background-color: #007bff;
-                color: white;
-                border: none;
-                padding: 10px 15px;
-                border-radius: 5px;
-                cursor: pointer;
-            }}
-            button:hover {{
-                background-color: #0056b3;
-            }}
-            ul {{
-                list-style-type: none;
-                padding: 0;
-            }}
-            li {{
-                margin: 5px 0;
-            }}
+            body {{ font-family: Arial, sans-serif; background-color: #f4f4f9; }}
+            div {{ margin: 20px 0; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }}
         </style>
     </head>
     <body>
         <h1>AI Assistant Dashboard</h1>
-        <div id="email-calendar">
-            <h2>Email & Calendar</h2>
-            <p>Emails: {', '.join(mock_data['email_calendar']['emails'])}</p>
-            <p>Calendar: {', '.join(mock_data['email_calendar']['calendar'])}</p>
-            <button onclick="refresh('email_calendar')">Refresh</button>
-        </div>
 
-        <div id="to-do">
+        <div>
             <h2>To-Do List</h2>
-            <ul>
-                <li><strong>Today:</strong> {', '.join(mock_data['to_do']['today'])}</li>
-                <li><strong>Near-term:</strong> {', '.join(mock_data['to_do']['near_term'])}</li>
-                <li><strong>Medium-term:</strong> {', '.join(mock_data['to_do']['medium_term'])}</li>
-                <li><strong>Long-term:</strong> {', '.join(mock_data['to_do']['long_term'])}</li>
+            <ul id="to-do-list">
+                {"".join([f"<li>{task}</li>" for task in mock_data['to_do']['today']])}
             </ul>
-            <button onclick="refresh('to_do')">Refresh</button>
+            <form action="/input/to_do" method="post">
+                <label>Add New Tasks:</label><br>
+                <textarea name="new_input" rows="4" cols="50"></textarea><br>
+                <button type="submit">Submit</button>
+            </form>
         </div>
 
-        <div id="investigations">
+        <div>
+            <h2>Email & Calendar</h2>
+            <ul>
+                {"".join([f"<li>{email}</li>" for email in mock_data['email_calendar']['emails']])}
+            </ul>
+            <form action="/input/email_calendar" method="post">
+                <label>Add New Email:</label><br>
+                <textarea name="new_input" rows="2" cols="50"></textarea><br>
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+
+        <div>
             <h2>Investigations</h2>
             <ul>
-                {"".join([f"<li>{inv['name']}: {inv['status']}</li>" for inv in mock_data['investigations']])}
+                {"".join([f"<li>{task}</li>" for task in mock_data['investigations']])}
             </ul>
-            <button onclick="refresh('investigations')">Refresh</button>
-        </div>
+            <form action="/input/investigations" method="post">
+                <label>Add Investigation Task:</label><br>
+                <textarea name="new_input" rows="2" cols="50"></textarea><br>
+                <button type="submit">Submit</button>
+            </form>
 
         <div id="threat-hunts">
             <h2>Threat Hunts</h2>
@@ -195,13 +192,6 @@ async def index():
             <button onclick="refresh('threat_hunts')">Refresh</button>
         </div>
 
-        <div id="threat-intel">
-            <h2>Threat Intel Research</h2>
-            <ul>
-                {"".join([f"<li>{intel}</li>" for intel in mock_data['threat_intel']])}
-            </ul>
-            <button onclick="refresh('threat_intel')">Refresh</button>
-        </div>
 
         <div id="gap-filling">
             <h2>Gap Filling</h2>
@@ -211,7 +201,9 @@ async def index():
             <button onclick="refresh('gap_filling')">Refresh</button>
         </div>
 
-        <div id="workflow-monitoring">
+        </div>
+
+                <div id="workflow-monitoring">
             <h2>Workflow Monitoring</h2>
             <ul id="workflow-list"></ul>
                 <script>
@@ -231,27 +223,12 @@ async def index():
                 </script>
         </div>
 
-        <script>
-            function refresh(module) {{
-                alert('Refreshing ' + module + ' module!');
-            }}
-        </script>
     </body>
     </html>
     """
     return HTMLResponse(content=html_content)
 
-@app.get("/refresh/{module}")
-async def refresh(module: str):
-    """Endpoint to simulate refreshing a module."""
-    agent = agent_functions.get(module)
-    if agent:
-        return {"status": "success", "module": module, "data": agent()}
-    return {"status": "error", "message": "Agent not found"}
-
 if __name__ == "__main__":
-    # Launch browser automatically
-    Thread(target=lambda: webbrowser.open("http://127.0.0.1:8000")).start()
-    # Start the workflow monitoring thread
     Thread(target=monitor_workflow, daemon=True).start()
+    Thread(target=lambda: webbrowser.open("http://127.0.0.1:8000")).start()
     uvicorn.run(app, host="0.0.0.0", port=8000)
