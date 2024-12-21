@@ -12,9 +12,6 @@ from threading import Thread
 import requests
 import os
 
-# Export API_KEY
-API_KEY = os.getenv('API_KEY')
-
 
 #export API_KEY=
 API_KEY = os.getenv('API_KEY')
@@ -70,6 +67,7 @@ def call_gemini_api(prompt, api_key):
         return None
 
 print(call_gemini_api("hi!",API_KEY))
+exit(0)
 
 app = FastAPI()
 
@@ -170,7 +168,7 @@ def monitor_workflow():
     while True:
         try:
             active_window = pywinctl.getActiveWindow()
-            window_title = active_window.title if active_window else "Unknown Window"
+            window_title = active_window.title
             current_time = time.time()
             if window_title:
                 if window_title in workflow_data:
