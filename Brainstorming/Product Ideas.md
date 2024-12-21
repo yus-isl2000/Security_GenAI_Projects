@@ -6,6 +6,8 @@ Leverage our technical expertise:
 - Model Distillation: help make small model or specialized model
 - Consult on how to integrate AI in businesses
 - Build prompts for cybersecurity
+- Workflow identifier service
+- AI assistant Dashboard: see cgpt conversation for details
 
 Mass market type of product:
 (For averager consumer, targetting consumers directly)
