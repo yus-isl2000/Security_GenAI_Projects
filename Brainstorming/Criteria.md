@@ -1,7 +1,7 @@
 # Idea Evaluation Criteria Table
 
 # --------------------------------------------------------
-Ideas: cyber analyst 
+Ideas: automate log analysis 
 
 - Problem Definition & Market Need: Need for automated log analysis. Jumpt start investigation. 10/10
 - Technical Feasibility & Resources: 2/10
@@ -10,8 +10,8 @@ Ideas: cyber analyst
 - Revenue & Monetization Potential: 5/10
 - Regulatory & Compliance: 2/10
 - Go-to-Market & Customer Validation: 2/10
-- Scalability & Future Roadmap: 2/10
-- Overall score: 33/80
+- Scalability & Future Roadmap: 5/10
+- Overall score: 36/80
 
 # --------------------------------------------------------
 
