@@ -1,5 +1,20 @@
 # Idea Evaluation Criteria Table
 
+;;--------------------------------------------------------
+Ideas: cyber analyst 
+
+Problem Definition & Market Need: Need for automated log analysis. Jumpt start investigation. 10/10
+Technical Feasibility & Resources: 2/10
+Ability to Demonstrate Quick Value: 0/10
+Uniqueness & Differentiation: 10/10
+Revenue & Monetization Potential: 5/10
+Regulatory & Compliance: 2/10
+Go-to-Market & Customer Validation: 2/10
+Scalability & Future Roadmap: 2/10
+Overall score: 33/80
+
+;;--------------------------------------------------------
+
 | **Criterion**                          | **Key Questions**                                                                                                                                             | **Why It Matters**                                                                                                                                  |
 |----------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------|
 | **Problem Definition & Market Need**   | - Is there a clear and pressing security problem being solved?                                                                                               | A well-defined, real-world problem attracts early customers and interest from acquirers.                                                            |
@@ -33,3 +48,7 @@
 1. Evaluate each idea against these criteria by answering the key questions.  
 2. Use the "Why It Matters" column to prioritize criteria based on your goals.  
 3. Optionally add scoring columns or "Pass/Fail" checkboxes for comparison.  
+
+
+
+
