@@ -14,7 +14,7 @@ Ideas: automate log analysis
 - Overall score: 36/80
 
 - # --------------------------------------------------------
-Ideas: automate log analysis 
+Next idea:
 
 - Problem Definition & Market Need: 
 - Technical Feasibility & Resources: 
