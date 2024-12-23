@@ -13,6 +13,21 @@ Ideas: automate log analysis
 - Scalability & Future Roadmap: 5/10
 - Overall score: 36/80
 
+- # --------------------------------------------------------
+Ideas: automate log analysis 
+
+- Problem Definition & Market Need: 
+- Technical Feasibility & Resources: 
+- Ability to Demonstrate Quick Value: 
+- Uniqueness & Differentiation:
+- Revenue & Monetization Potential: 
+- Regulatory & Compliance: 
+- Go-to-Market & Customer Validation:
+- Scalability & Future Roadmap: 
+- Overall score: 
+
+
+- # --------------------------------------------------------
 # --------------------------------------------------------
 
 | **Criterion**                          | **Key Questions**                                                                                                                                             | **Why It Matters**                                                                                                                                  |
